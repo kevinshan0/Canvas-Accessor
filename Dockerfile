@@ -1,21 +1,16 @@
-# Use an official lightweight Node.js image
-FROM node:16-alpine
-
-# Create app directory
+FROM node:22-alpine AS builder
 WORKDIR /app
-
-# Copy package files and install
 COPY package*.json ./
-RUN npm install
-
-# Copy the rest of your app
+RUN npm ci
 COPY . .
-
-# Build your app for production
 RUN npm run build
+RUN npm prune --production
 
-# Expose port 3000 (SvelteKit preview runs here by default if you do `npm run preview`)
+FROM node:22-alpine
+WORKDIR /app
+COPY --from=builder /app/build build/
+COPY --from=builder /app/node_modules node_modules/
+COPY package.json .
 EXPOSE 3000
-
-# Start the app
-CMD ["npm", "run", "preview"]
+ENV NODE_ENV=production
+CMD [ "node", "build" ]

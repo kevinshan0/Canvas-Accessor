@@ -10,7 +10,7 @@ export async function GET({ request }) {
   try {
     // Canvas API: GET /api/v1/users/self/upcoming_events
     // or /api/v1/users/{user_id}/upcoming_events
-    const response = await fetch(`${CANVAS_BASE_URL}/api/v1/users/${import.meta.env.VITE_USER_ID}/upcoming_events`, {
+    const response = await fetch(`${CANVAS_BASE_URL}/api/v1/users/self/upcoming_events`, {
       headers: {
         Authorization: `Bearer ${import.meta.env.VITE_CANVAS_TOKEN}`
       }
